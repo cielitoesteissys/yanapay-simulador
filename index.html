@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050914">
+  <meta name="description" content="Simulador visual Yanapay: una pulsera de emergencia que flota y activa una alerta de prueba.">
+  <title>Pulsera de la Confianza | Yanapay</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="image" href="pulsera-yanapay.png" fetchpriority="high">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <audio id="yanapayMusic" preload="none" loop>
+    <source src="string-karma-pastorcita.mp3" type="audio/mpeg">
+  </audio>
+  <div class="textile-border textile-border-top" aria-hidden="true"></div>
+  <div class="textile-border textile-border-side" aria-hidden="true"></div>
+  <div class="starfield" aria-hidden="true"></div>
+
+  <main class="simulator">
+    <div class="floor-grid" aria-hidden="true"></div>
+    <div class="floor-glow" aria-hidden="true"></div>
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Yanapay, inicio">
+        <img class="brand-logo" src="LOGO.png" alt="Yanapay">
+        <span><strong>SIMULADOR YANAPAY</strong><small>PULSERA DE EMERGENCIA</small></span>
+      </a>
+      <div class="topbar-tools">
+        <span class="live-status"><i></i><span id="system-label">SISTEMA LISTO</span></span>
+        <span class="top-divider" aria-hidden="true"></span>
+        <button class="sound-toggle" id="sound-toggle" type="button" aria-pressed="false" aria-label="Activar sonido ambiental">
+          <svg class="sound-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h4l5 4V6l-5 4H4Zm12.5-2.5a6 6 0 0 1 0 9m2.5-11.5a9.5 9.5 0 0 1 0 14"/></svg>
+          <svg class="sound-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h4l5 4V6l-5 4H4Zm12 1 5 5m0-5-5 5"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <section class="experience" aria-labelledby="title">
+      <div class="hero-layout">
+        <div class="intro">
+          <p class="eyebrow"><span></span> YANAPAY · TECNOLOGÍA CON RAÍCES</p>
+          <h1 id="title">Pulsera de la <span>Confianza.</span></h1>
+          <p class="tagline">“Su independencia, tu tranquilidad.”</p>
+          <p class="hero-description">Una propuesta tecnológica diseñada para facilitar la solicitud de ayuda de los adultos mayores mediante un sistema de alerta sencillo.</p>
+          <div class="hero-actions">
+            <button class="hero-primary" id="hero-emergency-button" type="button">Simular una emergencia</button>
+            <button class="hero-secondary" id="hero-how-button" type="button">Conocer el funcionamiento</button>
+          </div>
+          <ul class="hero-proof" aria-label="Características principales">
+            <li>Activación mediante botón</li>
+            <li>Comunicación GSM/SMS prevista</li>
+            <li>Diseño orientado a la autonomía</li>
+          </ul>
+        </div>
+
+        <div class="product-showcase" aria-label="Pulsera Yanapay original">
+          <div class="device-aura" aria-hidden="true"></div>
+          <div class="bracelet-float" id="bracelet-float">
+            <canvas class="bracelet-canvas" id="bracelet-canvas" role="img" aria-label="Vista del dispositivo" hidden></canvas>
+            <img class="bracelet-model" id="bracelet-model" src="pulsera-yanapay.png" alt="Pulsera real Yanapay gris con franjas rojas y blancas, botón central rojo con símbolo del sol y LED verde" fetchpriority="high" decoding="async">
+            <button class="bracelet-button is-front" id="bracelet-button" type="button" aria-label="Presionar el botón rojo de la pulsera real para simular una emergencia"></button>
+          </div>
+          <span class="model-caption"><i></i> DISEÑO YANAPAY · PROTOTIPO INTERACTIVO</span>
+          <div class="emergency-control">
+            <button class="emergency-button" id="emergency-button" type="button">
+              <span class="button-pulse" aria-hidden="true"></span>
+              <span class="button-content"><span class="button-symbol" aria-hidden="true">!</span><span id="button-label">SIMULAR EMERGENCIA</span></span>
+            </button>
+            <p id="button-hint">El botón activo prepara una alerta solamente en esta pantalla</p>
+          </div>
+        </div>
+
+        <div class="dashboard-column">
+          <aside class="status-card" aria-label="Estado del sistema de demostración">
+            <div class="status-heading">
+              <span class="status-heading-icon" aria-hidden="true">⌁</span>
+              <div><p>MONITOR YANAPAY</p><h2>Estado del sistema</h2></div>
+              <span class="demo-label">DEMO</span>
+            </div>
+            <div class="sim-summary">
+              <span class="sim-icon" aria-hidden="true"><i></i></span>
+              <span><small>MODALIDAD</small><strong id="sim-status">Demostración</strong></span>
+              <span class="status-led"></span>
+            </div>
+            <div class="status-row"><span><i class="status-icon signal-icon">◖</i> Estado GSM</span><strong id="network-status">En espera</strong></div>
+            <div class="status-row"><span><i class="status-icon">▣</i> Destinatario</span><strong class="recipient-number">+51 974 292 064</strong></div>
+            <div class="status-row"><span><i class="status-icon">✉</i> Estado del SMS</span><strong id="sms-status" class="status-idle">En espera</strong></div>
+            <div class="progress-track" role="progressbar" aria-label="Progreso de la simulación" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+              <span class="progress-fill" id="progress-fill"></span>
+            </div>
+            <button class="reset-button" id="reset-button" type="button">Restablecer demostración</button>
+            <p class="card-footnote"><span>●</span> Sin chip físico ni conexión real</p>
+          </aside>
+
+          <div class="message-toast" id="message-toast" role="status" aria-live="polite" hidden>
+            <span class="toast-icon" aria-hidden="true">Y</span>
+            <span><small>VISTA PREVIA · NO ENVIADO</small><strong>Alerta de prueba preparada</strong><em>Demostración Yanapay.</em></span>
+            <span class="toast-check" aria-hidden="true">✓</span>
+          </div>
+
+          <aside class="sms-panel" aria-label="Preparación de mensaje SMS">
+            <div class="sms-panel-heading">
+              <div><p>MENSAJE DE EMERGENCIA</p><h2>SMS de demostración</h2></div>
+              <span>NO ENVIADO</span>
+            </div>
+            <label for="phoneNumber">Número del destinatario</label>
+            <input id="phoneNumber" type="tel" value="+51 974 292 064" autocomplete="off">
+            <p class="sms-preview" id="smsPreview">El mensaje aparecerá aquí al generar una alerta.</p>
+            <div class="sms-actions">
+              <button type="button" id="copySMS">Copiar mensaje</button>
+              <button type="button" id="prepareSMS">Preparar SMS</button>
+            </div>
+            <div class="music-controls" aria-label="Controles de música">
+              <button type="button" id="musicToggle" aria-pressed="false">Reproducir música</button>
+              <button type="button" id="musicMute" aria-pressed="false">Silenciar</button>
+              <input id="musicVolume" type="range" min="0" max="1" step="0.05" value="0.35" aria-label="Volumen de música">
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <dialog class="inside-dialog" id="inside-dialog" aria-labelledby="inside-title">
+      <div class="inside-panel">
+        <header class="inside-header">
+          <div>
+            <p>YANAPAY · VISTA INTERIOR</p>
+            <h2 id="inside-title">Así se activa la pulsera</h2>
+          </div>
+          <button class="inside-close" id="inside-close" type="button" aria-label="Cerrar vista interior">×</button>
+        </header>
+        <p class="inside-description">La carcasa se abre para mostrar cómo el botón activa el control, el indicador y la alarma.</p>
+        <svg class="interior-diagram" id="interior-diagram" viewBox="0 0 1000 430" role="img" aria-labelledby="diagram-title diagram-description" data-stage="idle">
+          <title id="diagram-title">Vista seccionada del interior de la pulsera Yanapay</title>
+          <desc id="diagram-description">Ilustración del circuito interior con botón de auxilio, placa de control, luz indicadora y zumbador, conectados por una señal animada.</desc>
+          <defs>
+            <linearGradient id="strap" x1="0" x2="1" y1="0" y2="1">
+              <stop offset="0" stop-color="#f8f6f2"/>
+              <stop offset=".52" stop-color="#c5c6ca"/>
+              <stop offset="1" stop-color="#858b96"/>
+            </linearGradient>
+            <linearGradient id="shell" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0" stop-color="#f4f4f2"/>
+              <stop offset=".45" stop-color="#bfc3c9"/>
+              <stop offset="1" stop-color="#747e8a"/>
+            </linearGradient>
+            <linearGradient id="cavity" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0" stop-color="#101e2b"/>
+              <stop offset="1" stop-color="#07111a"/>
+            </linearGradient>
+            <linearGradient id="board" x1="0" x2="1" y1="0" y2="1">
+              <stop offset="0" stop-color="#3baf91"/>
+              <stop offset="1" stop-color="#12634f"/>
+            </linearGradient>
+            <linearGradient id="button" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0" stop-color="#ff6470"/>
+              <stop offset=".55" stop-color="#f21c3a"/>
+              <stop offset="1" stop-color="#a90025"/>
+            </linearGradient>
+            <linearGradient id="battery" x1="0" x2="1">
+              <stop offset="0" stop-color="#78818d"/>
+              <stop offset=".5" stop-color="#d8dce1"/>
+              <stop offset="1" stop-color="#7c8792"/>
+            </linearGradient>
+            <filter id="device-shadow" x="-.2" y="-.3" width="1.4" height="1.7">
+              <feGaussianBlur in="SourceAlpha" stdDeviation="9"/>
+              <feOffset dy="9"/>
+              <feComponentTransfer><feFuncA type="linear" slope=".45"/></feComponentTransfer>
+              <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <filter id="signal-glow" x="-.5" y="-.5" width="2" height="2">
+              <feGaussianBlur stdDeviation="4" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <ellipse cx="500" cy="368" rx="340" ry="31" fill="#00bdf2" opacity=".09"/>
+          <ellipse cx="500" cy="370" rx="285" ry="20" fill="none" stroke="#1b9cc2" stroke-opacity=".27"/>
+
+          <path d="M0 153 C98 147 171 162 271 203 L307 232 L296 327 C186 353 95 337 0 310Z" fill="url(#strap)" stroke="#eff4fa" stroke-opacity=".48" stroke-width="3"/>
+          <path d="M0 175 C105 169 178 185 270 223 M0 291 C104 311 193 315 294 293" fill="none" stroke="#6b7480" stroke-opacity=".45" stroke-width="3"/>
+          <path d="M1000 153 C902 147 829 162 729 203 L693 232 L704 327 C814 353 905 337 1000 310Z" fill="url(#strap)" stroke="#eff4fa" stroke-opacity=".48" stroke-width="3"/>
+          <path d="M1000 175 C895 169 822 185 730 223 M1000 291 C896 311 807 315 706 293" fill="none" stroke="#6b7480" stroke-opacity=".45" stroke-width="3"/>
+          <path d="M208 198 L269 212 L260 327 L197 317Z M792 198 L731 212 L740 327 L803 317Z" fill="#e52c42" opacity=".92"/>
+          <path d="M225 202 L275 216 L266 323 L216 315Z M775 202 L725 216 L734 323 L784 315Z" fill="#f3f4f4" opacity=".95"/>
+
+          <g filter="url(#device-shadow)">
+            <path d="M282 138 Q327 105 400 112 L458 132 L500 149 L542 132 L600 112 Q673 105 718 138 Q757 165 766 220 L750 321 Q739 359 696 365 L304 365 Q261 359 250 321 L234 220 Q243 165 282 138Z" fill="url(#shell)" stroke="#f8fbff" stroke-opacity=".82" stroke-width="4"/>
+            <path d="M299 182 Q326 158 373 161 L447 178 L500 192 L553 178 L627 161 Q674 158 701 182 L714 301 Q708 329 681 335 L319 335 Q292 329 286 301Z" fill="url(#cavity)" stroke="#f5f8fc" stroke-opacity=".45" stroke-width="3"/>
+            <path d="M302 183 Q334 165 371 170 L437 187 M698 183 Q666 165 629 170 L563 187" fill="none" stroke="#ff5061" stroke-opacity=".72" stroke-width="4"/>
+          </g>
+
+          <g class="node node-button">
+            <circle cx="500" cy="169" r="52" fill="#5c1021" stroke="#f5a6ad" stroke-width="4"/>
+            <circle class="node-core" cx="500" cy="167" r="41" fill="url(#button)" stroke="#ffabb0" stroke-width="3"/>
+            <circle cx="500" cy="167" r="31" fill="none" stroke="#8f0d26" stroke-opacity=".55" stroke-width="2"/>
+            <path d="M482 153 Q500 139 518 153" fill="none" stroke="#fff" stroke-opacity=".42" stroke-width="4" stroke-linecap="round"/>
+            <text x="500" y="174" fill="#fff" font-family="Arial,sans-serif" font-size="12" font-weight="700" letter-spacing="2" text-anchor="middle">SOS</text>
+          </g>
+
+          <g class="node node-controller">
+            <rect x="354" y="222" width="292" height="101" rx="9" fill="url(#board)" stroke="#7ee3c5" stroke-opacity=".7" stroke-width="2"/>
+            <path d="M372 237 H405 V250 H428 M570 237 H619 V253 H634 M376 307 H403 V292 H423 M585 307 H622 V289 H636" fill="none" stroke="#a9f4d8" stroke-opacity=".5" stroke-width="2"/>
+            <rect x="359" y="247" width="30" height="45" rx="5" fill="#9eaab4" stroke="#f1f5f8" stroke-width="2"/>
+            <rect x="397" y="241" width="17" height="17" rx="2" fill="#d8c877"/>
+            <rect x="424" y="243" width="78" height="60" rx="5" fill="#101923" stroke="#697782" stroke-width="2"/>
+            <path d="M436 251 H490 M436 259 H482 M436 287 H468" stroke="#82929d" stroke-opacity=".6"/>
+            <rect x="514" y="246" width="38" height="25" rx="3" fill="#202c34"/>
+            <rect x="558" y="246" width="26" height="18" rx="3" fill="#d0bd64"/>
+            <rect x="514" y="278" width="70" height="25" rx="3" fill="#1e2b35"/>
+            <g fill="#e2c76a">
+              <circle cx="404" cy="230" r="3"/><circle cx="419" cy="230" r="3"/><circle cx="434" cy="230" r="3"/><circle cx="449" cy="230" r="3"/>
+              <circle cx="464" cy="230" r="3"/><circle cx="479" cy="230" r="3"/><circle cx="494" cy="230" r="3"/><circle cx="509" cy="230" r="3"/>
+              <circle cx="524" cy="230" r="3"/><circle cx="539" cy="230" r="3"/><circle cx="554" cy="230" r="3"/><circle cx="569" cy="230" r="3"/>
+              <circle cx="584" cy="230" r="3"/><circle cx="599" cy="230" r="3"/>
+              <circle cx="404" cy="315" r="3"/><circle cx="419" cy="315" r="3"/><circle cx="434" cy="315" r="3"/><circle cx="449" cy="315" r="3"/>
+              <circle cx="464" cy="315" r="3"/><circle cx="479" cy="315" r="3"/><circle cx="494" cy="315" r="3"/><circle cx="509" cy="315" r="3"/>
+              <circle cx="524" cy="315" r="3"/><circle cx="539" cy="315" r="3"/><circle cx="554" cy="315" r="3"/><circle cx="569" cy="315" r="3"/>
+              <circle cx="584" cy="315" r="3"/><circle cx="599" cy="315" r="3"/>
+            </g>
+            <rect x="420" y="210" width="162" height="22" rx="11" fill="#081521" fill-opacity=".92" stroke="#55dbc3" stroke-opacity=".48"/>
+            <text x="501" y="225" fill="#c8fff0" font-family="Arial,sans-serif" font-size="9" font-weight="700" letter-spacing="2" text-anchor="middle">CONTROLADOR</text>
+          </g>
+
+          <g class="node node-indicator">
+            <circle cx="689" cy="247" r="18" fill="#073b34" stroke="#6decc3" stroke-opacity=".65" stroke-width="2"/>
+            <circle class="node-core" cx="689" cy="247" r="10" fill="#46f5ae"/>
+            <path d="M689 219 V212 M689 282 V275 M661 247 H654 M724 247 H717" stroke="#69eec4" stroke-opacity=".7" stroke-width="2"/>
+          </g>
+          <g class="node node-buzzer">
+            <circle cx="689" cy="300" r="19" fill="#18232d" stroke="#8294a0" stroke-width="3"/>
+            <circle class="node-core" cx="689" cy="300" r="8" fill="#344552"/>
+            <path d="M716 290 Q728 300 716 310 M724 283 Q742 300 724 317" fill="none" stroke="#8bdcff" stroke-opacity=".72" stroke-width="2"/>
+          </g>
+
+          <path class="signal-route" d="M500 208 L500 220 L470 237 L470 265 L620 265 L652 247 L670 247 M620 265 L657 300 L670 300" fill="none" stroke="#62e6ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle class="signal-pulse" r="5" fill="#e3fbff" filter="url(#signal-glow)">
+            <animateMotion dur="2.4s" repeatCount="indefinite" path="M500 208 L500 220 L470 237 L470 265 L620 265 L652 247 L670 247"/>
+          </circle>
+          <g fill="#dce8f3" font-family="Arial,sans-serif" font-size="11" font-weight="700" letter-spacing="1.4">
+            <text x="500" y="103" text-anchor="middle">BOTÓN DE AUXILIO</text>
+            <text x="689" y="221" text-anchor="middle">LED</text>
+            <text x="689" y="342" text-anchor="middle">ZUMBADOR</text>
+          </g>
+          <text x="500" y="397" fill="#80a1b7" font-family="monospace" font-size="10" letter-spacing="2" text-anchor="middle">CARCASA SECCIONADA · CIRCUITO DE RESPUESTA</text>
+        </svg>
+        <div class="interior-status-row">
+          <span class="interior-status-led"></span>
+          <p class="interior-status" id="interior-status" role="status" aria-live="polite">Sistema en espera · pulsa el botón rojo</p>
+          <span class="interior-mode">VISTA SIMULADA</span>
+        </div>
+        <p class="inside-footnote">La secuencia muestra el funcionamiento previsto; el aviso SMS y el circuito físico no están conectados.</p>
+      </div>
+    </dialog>
+    <section class="media-gallery" aria-label="Galería multimedia del proyecto">
+      <div class="gallery-heading"><p>CAJAMARCA · YANAPAY</p><h2>Raíces del proyecto</h2></div>
+      <div class="media-grid">
+        <figure><img src="pulsera-giro.webp" alt="Vista complementaria de la pulsera real Yanapay" loading="lazy" decoding="async"><figcaption>Vista complementaria</figcaption></figure>
+        <figure><video controls preload="none" muted><source src="787878.mp4" type="video/mp4">Tu navegador no admite video.</video><figcaption>Presentación del proyecto</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="how-section" id="como-funciona">
+      <div class="section-heading">
+        <p class="section-kicker">El funcionamiento previsto</p>
+        <h2>Una señal simple.<br><span>Una ayuda cercana.</span></h2>
+      </div>
+      <div class="steps-grid">
+        <article class="step-card"><span>01</span><h3>Presiona el botón</h3><p>El usuario activa la solicitud de ayuda mediante el botón central de la pulsera.</p></article>
+        <article class="step-card"><span>02</span><h3>Se activa la alerta</h3><p>La pulsera está diseñada para activar una señal de comunicación ante una emergencia.</p></article>
+        <article class="step-card"><span>03</span><h3>Se informa al contacto</h3><p>El sistema contempla comunicar el aviso mediante SMS al contacto registrado.</p></article>
+      </div>
+    </section>
+
+    <section class="benefits-section" aria-label="Beneficios del proyecto">
+      <article><strong>Activación sencilla</strong><p>Una propuesta que prioriza el botón físico y una respuesta fácil de reconocer.</p></article>
+      <article><strong>Comunicación prevista</strong><p>Diseñada para informar a un contacto mediante el sistema GSM/SMS contemplado.</p></article>
+      <article><strong>Diseño cercano</strong><p>Pensada para adultos mayores y para aportar tranquilidad a sus familias.</p></article>
+    </section>
+
+    <footer class="footer">
+      <span>YANAPAY <i>·</i> CAJAMARCA, PERÚ</span>
+      <span>SIMULACIÓN INTERACTIVA · NO CONECTADA A RED GSM REAL</span>
+      <span>SIMULACIÓN LOCAL <i>·</i> NO ENVÍA SMS NI CONTACTA AL NÚMERO</span>
+    </footer>
+  </main>
+</body>
+</html>
